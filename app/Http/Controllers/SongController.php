@@ -58,6 +58,7 @@ class SongController extends Controller
         {
             return abort(404, "Song not found");
         }
+
         return view('songs.edit', ['song' => $songs[$id]]);
     }
 

@@ -8,6 +8,12 @@
     <title>Create pagina</title>
 </head>
 <body>
-
+<div>
+    <form action >
+        <label for="song">Song:</label><br><br>
+        <input type="text"><br><br>
+        <input type="submit">
+    </form>
+</div>
 </body>
 </html>
