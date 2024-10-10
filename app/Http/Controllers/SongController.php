@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Song;
 use Illuminate\Http\Request;
 
 class SongController extends Controller
@@ -11,8 +12,7 @@ class SongController extends Controller
      */
     public function index()
     {
-        $songs = ['Living on a prayer', 'Nothing else matters',
-            'Thunderstruck', 'Back in black', 'Ace of spades'];
+        $songs = Song::all();
         return view('songs.index', ['songs' => $songs]);
     }
 
@@ -29,23 +29,38 @@ class SongController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validate the request data
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'singer' => 'nullable|string|max:255',
+        ]);
+
+        // Create a new song instance with the validated data
+        $song = new Song();
+        $song->title = $request->title;
+        $song->singer = $request->singer;
+        $song->save();
+
+        // Redirect to the index page with a success message
+        return redirect()->route('songs.index')->with('success', 'Song created successfully.');
     }
+
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        $songs = ['Living on a prayer', 'Nothing else matters',
-            'Thunderstruck', 'Back in black', 'Ace of spades'];
+        $song = Song::findOrFail($id);
+        // find can be translated below:
+        // Song::where('id', '=', $id)->first();
 
-        if (!isset($songs[$id]))
-        {
-            return abort(404, "Song not found");
-        }
+        //  fail can be translated below:
+        // SELECT * FROM `songs` WHERE id = $id LIMIT 1;
 
-        return view('songs.show', ['song' => $songs[$id]]);
+        // Geeft dit niks terug, dan geef een 404 error
+
+        return view('songs.show', ['song' => $song]);
     }
 
     /**
@@ -53,13 +68,8 @@ class SongController extends Controller
      */
     public function edit(string $id)
     {
-        $songs = ['Living on a prayer', 'Nothing else matters', 'Thunderstruck', 'Back in black', 'Ace of spades'];
-        if (!isset($songs[$id]))
-        {
-            return abort(404, "Song not found");
-        }
-
-        return view('songs.edit', ['song' => $songs[$id]]);
+        $song = Song::findOrFail($id);
+        return view('songs.edit', ['song' => $song]);
     }
 
     /**
@@ -67,14 +77,31 @@ class SongController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-    }
+        // Validate the request data
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'singer' => 'required|string|max:255',
+        ]);
 
+        // Find the song by its ID and update it with the validated data
+        $song = Song::findOrFail($id);
+        $song->title = $request->title;
+        $song->singer = $request->singer;
+        $song->save();
+
+        // Redirect to the index page with a success message
+        return redirect()->route('songs.index')->with('success', 'Song updated successfully.');
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        // Find the song by its ID and delete it
+        $song = Song::findOrFail($id);
+        $song->delete();
+
+        // Redirect to the index page with a success message
+        return redirect()->route('songs.index')->with('success', 'Song deleted successfully.');
     }
 }

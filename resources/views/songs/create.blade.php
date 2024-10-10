@@ -2,18 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Create pagina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @vite('resources/css/app.css')
+    <title>Create Song</title>
 </head>
-<body>
-<div>
-    <form action >
-        <label for="song">Song:</label><br><br>
-        <input type="text"><br><br>
-        <input type="submit">
-    </form>
-</div>
+<body class="bg-gray-100 p-6">
+    <div class="container mx-auto">
+        <nav class="flex justify-between items-center py-4">
+            <a href="{{ route('songs.index') }}" class="bg-blue-500 text-white py-2 px-4 rounded">Home</a>
+            <h1 class="text-2xl font-bold">Create New Song</h1>
+        </nav>
+
+        <div class="bg-white p-6 rounded shadow-md mt-6">
+            <form action="{{ route('songs.store') }}" method="POST">
+                @csrf
+                <div class="mb-4">
+                    <label for="title" class="block text-gray-700">Song Title:</label>
+                    <input type="text" name="title" class="w-full px-3 py-2 border rounded">
+                </div>
+                <div class="mb-4">
+                    <label for="singer" class="block text-gray-700">Singer:</label>
+                    <input type="text" name="singer" class="w-full px-3 py-2 border rounded">
+                </div>
+                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded">Create</button>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
